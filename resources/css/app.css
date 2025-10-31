@@ -8,4 +8,19 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-coral-50: #fff7f6;
+    --color-coral-100: #feece9;
+    --color-coral-300: #ffb8a1;
+    --color-coral-500: #ff7a59;
+    --color-coral-700: #d64f3a;
+
+    --color-slate-50: #f8fafc;
+    --color-slate-100: #f1f5f9;
+    --color-slate-300: #93a5b3;
+    --color-slate-700: #0f172a;
+
+    --font-sans: "Inter", ui-sans-serif, system-ui;
+
+    --radius-xl: 1rem;
 }

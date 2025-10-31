@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('api_logs', function (Blueprint $table) {
             $table->id();
             $table->string('request_body');
-            $table->string('response_status');
-            $table->string('response_payload');
+            $table->string('response_message');
             $table->timestamps();
         });
     }
