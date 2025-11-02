@@ -10,4 +10,19 @@ class LoginController extends Controller
     {
         return view('login');
     }
+
+    public function doLogin(Request $request)
+    {
+        $actual = env('AUTH_PW');
+
+        if (is_null($actual)) {
+            die('App misconfiguration.');
+        }
+
+        if ($request->input('access_code') === $actual) {
+            session()->put('is_logged_in', true);
+        }
+
+        return redirect('/');
+    }
 }
