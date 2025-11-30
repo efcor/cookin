@@ -33,8 +33,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-semibold">Cookin'</h1>
-                    <p class="text-sm text-slate-500">Pick ingredients and generate a delicious recipe instantly.</p>
+                    <h1 class="text-lg md:text-2xl font-semibold">Cookin'</h1>
+                    <p class="hidden md:block text-sm text-slate-500">Pick ingredients and generate a delicious recipe instantly.</p>
                 </div>
             </div>
 
@@ -42,7 +42,7 @@
                 <button id="helpBtn" class="px-4 py-2 text-sm rounded-full border border-slate-200 bg-white shadow-sm hover:shadow">
                     Help
                 </button>
-                <a href="/recipes" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coral-500 text-white text-sm shadow hover:opacity-95">
+                <a href="/recipes" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coral-500 text-white text-sm shadow hover:opacity-95">
                     Library
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
                 </a>

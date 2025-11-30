@@ -33,13 +33,13 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-2xl font-semibold">Cookin'</h1>
-                    <p class="text-sm text-slate-500">Pick ingredients and generate a delicious recipe instantly.</p>
+                    <h1 class="text-lg md:text-2xl font-semibold">Cookin'</h1>
+                    <p class="hidden md:block text-sm text-slate-500">Pick ingredients and generate a delicious recipe instantly.</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
-                <a id="saveBtn" href="/" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coral-500 text-white text-sm shadow hover:opacity-95">
+                <a id="saveBtn" href="/" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coral-500 text-white text-sm shadow hover:opacity-95">
                     Recipe Assistant
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
                 </a>
@@ -101,10 +101,16 @@
         </main>
 
         <footer class="mt-10 text-sm text-slate-400 text-center">
-            <span class="mr-1">Username: {{ session()->get('username') }}</span>
+            <!-- <span class="mr-1">Username: {{ session()->get('username') }}</span> -->
+            <!-- | -->
+            <div class="inline-flex text-blue-500">
+                <a href="https://forms.gle/cLaJ37KcH9mLRFJT8" target="_blank" class="text-blue-500 mr-1">Feedback Survey</a>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pt-0.5 size-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+            </div>
             |
             <div class="inline-flex text-blue-500">
-
                 <a href="https://github.com/efcor/cookin" target="_blank" class="text-blue-500 mr-1">View on GitHub</a>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pt-0.5 size-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
