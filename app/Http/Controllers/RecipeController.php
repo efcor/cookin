@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\GenerateRequest;
 use App\Models\ApiLog;
+use App\Models\Interaction;
 use Illuminate\Http\Request;
 use OpenAI;
 
@@ -11,7 +12,9 @@ class RecipeController extends Controller
 {
     public function index(Request $request)
     {
-        return view('recipe-index');
+        $recipe = Interaction::find($request->input('r', 999999999));
+
+        return view('recipe-index', compact('recipe'));
     }
 
     public function generate(GenerateRequest $request)
@@ -43,7 +46,8 @@ class RecipeController extends Controller
         $input = $request->validated();
         $ingredients = implode(', ', $request->input('ingredients'));
 
-        $prompt = "Generate a recipe using any number (it is ok to leave some out) of the following ingredients: $ingredients.\n\n"
+        $prompt = "Generate a recipe using some or all of the following ingredients: $ingredients.\n\n"
+            . "Please omit any ingredients as needed to make the recipe be more cohesive or taste better, especially if there are many ingredients. "
             . "The recipe shouldn't require any ingredients that aren't in the list above, except for exceedingly "
             . "common on-hand ingredients like salt, pepper, garlic powder, milk, and oil."
             . ($input['cuisine'] === 'Any' ? '' : ('The recipe should be '.$input['cuisine'].' cuisine. '))
@@ -61,7 +65,7 @@ class RecipeController extends Controller
         $client = OpenAI::client(env('OPENAI_API_KEY'));
 
         $response = $client->chat()->create([
-            'model' => 'gpt-4o-mini', // or 'gpt-4o'
+            'model' => 'gpt-4o', // or 'gpt-4o-mini'
             'messages' => $messages,
         ]);
 
@@ -72,6 +76,8 @@ class RecipeController extends Controller
         // The json that comes back from the model has ```json before the
         // acutal json and then ``` after, so remove those.
         $json = trim(trim($responseMessage, '```'), 'json');
+
+        Interaction::create(['username' => session('username'), 'input' => json_encode($input), 'output' => $json]);
 
         return response()->json(json_decode($json, true));
     }
@@ -108,5 +114,13 @@ class RecipeController extends Controller
         ';
 
         return response()->json(json_decode($json, true));
+    }
+
+    public function seeAll()
+    {
+        $mine = Interaction::where('username', session('username'))->get();
+        $others = Interaction::where('username', '!=', session('username'))->get();
+
+        return view('recipe-see-all', compact('mine', 'others'));
     }
 }

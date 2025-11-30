@@ -40,10 +40,11 @@
 
             <div class="flex items-center gap-3">
                 <button id="helpBtn" class="px-4 py-2 text-sm rounded-full border border-slate-200 bg-white shadow-sm hover:shadow">
-                    How it works
+                    Help
                 </button>
-                <a id="saveBtn" href="#" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coral-500 text-white text-sm shadow hover:opacity-95">
-                    Save
+                <a href="/recipes" class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coral-500 text-white text-sm shadow hover:opacity-95">
+                    Library
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>
                 </a>
             </div>
         </header>
@@ -171,14 +172,18 @@
                 </div>
 
                 <div class="mt-4 flex gap-2">
-                    <button id="copyBtn" class="flex-1 py-2 rounded-lg border border-slate-100 text-sm hover:shadow">Copy recipe</button>
-                    <button id="downloadBtn" class="flex-1 py-2 rounded-lg bg-slate-700 text-white text-sm hover:opacity-95">Download</button>
+                    <button id="copyBtn" class="flex-1 py-2 rounded-lg border border-slate-200 text-xs hover:shadow">Copy recipe</button>
+                    <button id="linkBtn" class="flex-1 py-2 rounded-lg border border-slate-200 text-xs hover:shadow">Copy link</button>
+                    <button id="downloadBtn" class="flex-1 py-2 rounded-lg bg-slate-700 text-white text-xs hover:opacity-95">Download</button>
                 </div>
             </section>
         </main>
 
         <footer class="mt-10 text-sm text-slate-400 text-center">
+            <span class="mr-1">Username: {{ session()->get('username') }}</span>
+            |
             <div class="inline-flex text-blue-500">
+
                 <a href="https://github.com/efcor/cookin" target="_blank" class="text-blue-500 mr-1">View on GitHub</a>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="pt-0.5 size-4">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -188,6 +193,16 @@
     </div>
 
     <script>
+        var app = {};
+        app.recipe = undefined;
+        app.rInputs = undefined;
+        app.rIngredients = [];
+        @if ($recipe)
+            app.recipe = {!! $recipe !!};
+            app.rInputs = JSON.parse(app.recipe.input);
+            app.rIngredients = app.rInputs.ingredients;
+        @endif
+
         // ===== sample ingredients dataset =====
         const INGREDIENTS = [
             "Chicken breast", "Ground beef", "Salmon", "Shrimp", "Tofu",
@@ -218,6 +233,7 @@
         const recipeSteps = document.getElementById('recipeSteps');
         const metaInfo = document.getElementById('metaInfo');
         const copyBtn = document.getElementById('copyBtn');
+        const linkBtn = document.getElementById('linkBtn');
         const downloadBtn = document.getElementById('downloadBtn');
 
         // maintain selected set
@@ -444,6 +460,15 @@
             });
         });
 
+        linkBtn.addEventListener('click', () => {
+            if (recipeCard.classList.contains('hidden')) return;
+            const text = `${window.location.origin}?r=${app.recipe.id}`
+            navigator.clipboard.writeText(text).then(() => {
+                linkBtn.textContent = 'Copied!';
+                setTimeout(() => linkBtn.textContent = 'Copy link', 1500);
+            });
+        });
+
         downloadBtn.addEventListener('click', () => {
             if (recipeCard.classList.contains('hidden')) return;
             const filename = (recipeTitle.textContent || 'recipe').toLowerCase().replace(/\s+/g, '-') + '.txt';
@@ -471,16 +496,47 @@
             renderList();
             updateSelectedUI();
 
+            // prefill the inputs and output if there is an r variable in the url query string:
+            if (app.recipe) {
+                // Pane 1 (Ingredients):
+                app.rIngredients.forEach((i) => {
+                    document.getElementById('ing-' + i.replace(/\s+/g, '-').toLowerCase()).click();
+                });
+
+                // Pane 2:
+                // "Cuisine" dropdown
+                document.getElementById('cuisine').querySelectorAll('option').forEach((o) => {
+                    if (o.innerText === app.rInputs.cuisine) {
+                        o.setAttribute('selected', 'selected');
+                    }
+                });
+
+                // "Diet" dropdown
+                document.getElementById('diet').querySelectorAll('option').forEach((o) => {
+                    if (o.innerText === app.rInputs.diet) {
+                        o.setAttribute('selected', 'selected');
+                    }
+                });
+
+                // "Servings" text input
+                document.getElementById('servings').value = app.rInputs.servings;
+
+                // "Time required" dropdown
+                document.getElementById('time').querySelectorAll('option').forEach((o) => {
+                    if (o.value === app.rInputs.minutes.toString()) {
+                        o.setAttribute('selected', 'selected');
+                    }
+                });
+
+                // Pane 3 (Output):
+                showRecipe(JSON.parse(app.recipe.output));
+            }
+
             generateBtn.addEventListener('click', generateRecipe);
 
             // top-right help button handler
             document.getElementById('helpBtn').addEventListener('click', () => {
-                alert('Select ingredients and options, then click Generate Recipe. An OpenAI model will attempt to come up with a recipe that fits!');
-            });
-
-            // top-right save button handler
-            document.getElementById('saveBtn').addEventListener('click', () => {
-                alert("My aspiration is to make this button give you a link that lets you come back to this recipe later.\n\nIn the meantime, there are buttons below the recipe that allow you to copy or download it.");
+                alert('Select any ingredients you have on hand or would like to use, then set your preferences in the "Recipe Options" column. Next, click "Generate Recipe" to have the assistant attempt to come up with a recipe that fits!');
             });
         });
     </script>

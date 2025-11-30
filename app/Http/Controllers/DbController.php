@@ -16,4 +16,18 @@ class DbController extends Controller
 
         return '';
     }
+
+    public function index2()
+    {
+        $records = ApiLog::all();
+
+        foreach ($records as $record) {
+            echo $record->id."<br>";
+            echo $record->request_body."<br>";
+            echo $record->response_message."<br>";
+            echo "<br><br>";
+        }
+
+        return '';
+    }
 }
