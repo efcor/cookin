@@ -77,9 +77,13 @@ class RecipeController extends Controller
         // acutal json and then ``` after, so remove those.
         $json = trim(trim($responseMessage, '```'), 'json');
 
-        Interaction::create(['username' => session('username'), 'input' => json_encode($input), 'output' => $json]);
+        $interaction = Interaction::create(['username' => session('username'), 'input' => json_encode($input), 'output' => $json]);
 
-        return response()->json(json_decode($json, true));
+        $payload = json_decode($json, true);
+
+        $payload['id'] = $interaction->id;
+
+        return response()->json($payload);
     }
 
     public function fakeGenerate()

@@ -385,6 +385,9 @@
                 // expecting a JSON with structure { title, ingredients: [], steps: [], timeMinutes, servings, cuisine }
                 const json = await resp.json();
                 showRecipe(json);
+
+                // this makes the "copy link" button work when the user hasn't yet left the page that generated the recipe.
+                app.recipe = {id: json.id};
             } catch (err) {
                 console.warn(err);
                 alert('Error. Please refresh the page and try again.');
